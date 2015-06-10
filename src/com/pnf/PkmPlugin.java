@@ -12,11 +12,12 @@ import com.pnfsoftware.jeb.util.logging.GlobalLog;
 import com.pnfsoftware.jeb.util.logging.ILogger;
 
 public class PkmPlugin extends AbstractUnitIdentifier{
-	public static final ILogger LOG = GlobalLog.getLogger(PkmPlugin.class);
-	public static final String ANDROID_TOOLS_DIR = "Android_Platform_Tools_Directory";
-	
 	private static final int[] PKM_MAGIC = {(byte) 0x50, (byte) 0x4B, (byte) 0x4D, (byte) 0x20, (byte) 0x31, (byte) 0x30};
 	private static final String ID = "pkm_plugin";
+	
+	public static final ILogger LOG = GlobalLog.getLogger(PkmPlugin.class);
+	public static final String ANDROID_TOOLS_DIR = "AndroidPlatformToolsDirectory";
+	public static final String PROP_NAME = ".parsers." + ID + "." + ANDROID_TOOLS_DIR;
 	
 	public PkmPlugin() {
 		super(ID, 0);
@@ -30,14 +31,15 @@ public class PkmPlugin extends AbstractUnitIdentifier{
         super.initialize(parent, pm);
         
         // We need to use the android tools, so require it as an input before working with PKM files
-        PropertyTypeString pts = PropertyTypeString.create(3, 80, ANDROID_TOOLS_DIR);
-        parent.addDefinition(ANDROID_TOOLS_DIR, pts);
+        PropertyTypeString pts = PropertyTypeString.create();
+        
+        if(getPropertyDefinitionManager().getDefinition(ANDROID_TOOLS_DIR) == null)
+        	getPropertyDefinitionManager().addDefinition(ANDROID_TOOLS_DIR, pts);
     }
 
 	@Override
 	public IUnit prepare(String name, byte[] data, IUnitProcessor processor, IUnit parent) {
-		LOG.info("%s", "Name is " + name);
-		PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
+		PkmUnit unit = new PkmUnit(this, name, data, processor, parent, pdm);
 		return unit;
 	}
 
