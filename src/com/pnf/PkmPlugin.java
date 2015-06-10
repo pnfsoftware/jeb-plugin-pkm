@@ -40,6 +40,7 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 	@Override
 	public IUnit prepare(String name, byte[] data, IUnitProcessor processor, IUnit parent) {
 		PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
+		unit.process();
 		return unit;
 	}
 
