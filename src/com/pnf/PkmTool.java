@@ -57,6 +57,26 @@ public class PkmTool {
 		originalDim.height = bytes.getShort();
 	}
 	
+	public String getTextureDim(){
+		return asString(textureDim);
+	}
+	
+	public String getOriginalDim(){
+		return asString(originalDim);
+	}
+	
+	private String asString(Dimension d){
+		StringBuffer b = new StringBuffer();
+		
+		b.append("[");
+		b.append(d.getWidth());
+		b.append("x");
+		b.append(d.getHeight());
+		b.append("]");
+		
+		return b.toString();
+	}
+	
 	private File dumpPkm(){
 		File pkm = TEMP.toPath().resolve(name).toFile();
 		FileOutputStream stream = null;

@@ -16,7 +16,7 @@ public class PkmUnit extends AbstractBinaryUnit {
 	private static final String TOOL = "etc1tool";
 
 	private PkmTool pkmTool;
-	private StringBuffer desc;
+	private StringBuffer desc = new StringBuffer();
 	private boolean processed = false;
 
 	public PkmUnit(String name, byte[] data, IUnitProcessor unitProcessor, IUnit parent, IPropertyDefinitionManager pdm) {
@@ -40,10 +40,6 @@ public class PkmUnit extends AbstractBinaryUnit {
 	}
 
 	public String getDescription(){
-		if(!processed){
-			desc = new StringBuffer(super.getDescription());
-		}
-
 		return desc.toString();
 	}
 
@@ -63,7 +59,11 @@ public class PkmUnit extends AbstractBinaryUnit {
 		if(sub != null)
 			getChildren().add(sub);
 
-
+		// Update description
+		processed = true;
+		desc.append("Properties:");
+		desc.append("Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
+		desc.append("Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
 
 		notifyListeners(new JebEvent(J.UnitChange));
 		return true;
