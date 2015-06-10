@@ -39,7 +39,7 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 
 	@Override
 	public IUnit prepare(String name, byte[] data, IUnitProcessor processor, IUnit parent) {
-		PkmUnit unit = new PkmUnit(this, name, data, processor, parent, pdm);
+		PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
 		return unit;
 	}
 
