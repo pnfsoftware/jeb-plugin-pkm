@@ -23,7 +23,8 @@ public class PkmUnit extends AbstractBinaryUnit {
 		super(null, data, TYPE, name, unitProcessor, parent, pdm);
 
 		// Make sure we can find the tool 
-		File platformTools = new File(getPropertyManager().getString(PkmPlugin.PROP_NAME));
+		/** TODO Don't hardcode this path **/
+		File platformTools = new File("C:\\Users\\carlos\\Downloads\\jeb-2.0.0.201505271805-CarlosGonzales-bBA-631586206-315243500646364846\\bin");//getPropertyManager().getString(PkmPlugin.PROP_NAME));
 		File etcTool = null;
 		File[] files = platformTools.listFiles();
 
