@@ -1,9 +1,11 @@
 package com.pnf;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import com.pnfsoftware.jeb.util.IO;
 
@@ -57,8 +59,7 @@ public class PkmTool {
 		return buff.toString();
 	}
 	
-	public boolean dumpPng(){
-		boolean success = false;
+	public File dumpPng(){
 		File input = dumpPkm();
 		
 		Process p = null;
@@ -74,12 +75,18 @@ public class PkmTool {
 		
 		if(p != null){
 			try {
-				success = p.waitFor() == 0;
+				p.waitFor();
 			} catch (InterruptedException e) {
 				PkmPlugin.LOG.catching(e);
 			}
 		}
 		
-		return success;
+		File output = null;
+		for(File f: input.getParentFile().listFiles()){
+			if(f.getName().endsWith("png"))
+				output = f;
+		}
+		
+		return output;
 	}
 }
