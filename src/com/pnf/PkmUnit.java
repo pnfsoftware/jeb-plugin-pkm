@@ -14,22 +14,27 @@ import com.pnfsoftware.jeb.core.units.IUnitProcessor;
 public class PkmUnit extends AbstractBinaryUnit {
 	private static final String TYPE = "pkm_image";
 	private static final String TOOL = "etc1tool";
-	
+
 	private PkmTool pkmTool;
 	private StringBuffer desc;
 	private boolean processed = false;
 
 	public PkmUnit(String name, byte[] data, IUnitProcessor unitProcessor, IUnit parent, IPropertyDefinitionManager pdm) {
 		super(null, data, TYPE, name, unitProcessor, parent, pdm);
-		
-		// Make sure we can find the tool
-		File platformTools = new File(parent.getPropertyManager().getString(PkmPlugin.ANDROID_TOOLS_DIR));
-		File etcTool = platformTools.toPath().resolve(TOOL).toFile();
-		
-		if(!etcTool.exists()){
-			throw new RuntimeException("etc1tool not found in directory " + platformTools.getAbsolutePath());
+
+		// Make sure we can find the tool 
+		File platformTools = new File(getPropertyManager().getString(PkmPlugin.PROP_NAME));
+		File etcTool = null;
+		File[] files = platformTools.listFiles();
+
+		for(File f: files){
+			if(f.getName().contains(TOOL))
+				etcTool = f;
 		}
-		
+
+		if(etcTool == null || !etcTool.exists())
+			throw new RuntimeException("Could not find etc1tool in directory " + platformTools.getAbsolutePath());
+
 		pkmTool = new PkmTool(name, etcTool, data);
 	}
 
@@ -44,7 +49,7 @@ public class PkmUnit extends AbstractBinaryUnit {
 	public boolean process(){
 		File png = pkmTool.dumpPng();
 		IUnit sub = null;
-		
+
 		if(png != null){
 			try {
 				byte[] data2 = Files.readAllBytes(png.toPath());
@@ -53,12 +58,12 @@ public class PkmUnit extends AbstractBinaryUnit {
 				PkmPlugin.LOG.catching(e);
 			}
 		}
-		
+
 		if(sub != null)
 			getChildren().add(sub);
-		
-		
-		
+
+
+
 		notifyListeners(new JebEvent(J.UnitChange));
 		return true;
 	}
