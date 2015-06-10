@@ -23,10 +23,38 @@ public class PkmTool {
 	private ByteBuffer bytes;
 	private String name;
 	private File etcTool;
+	private Dimension textureDim = new Dimension();
+	private Dimension originalDim = new Dimension();
+	
+	/*
+	 * PKM Structure:
+	 * 
+	 * char tag[6] = "PKM 10"
+	 * 
+	 * format (2 bytes) = number of mips (zero)
+	 * 
+	 * texture width (2 bytes) = multiple of 4 (big endian)
+	 * texture height (2 bytes) = "						"
+	 * 
+	 * original width (2 bytes) = Original dimensions (big endian)
+	 * original height (2 bytes) = " 					"
+	 * 
+	 */
 	
 	public PkmTool(String name, File etcTool, byte[] data){
 		bytes = ByteBuffer.wrap(data);
 		this.etcTool = etcTool;
+		this.name = name;
+		
+		// Process PKM info out of data
+		bytes.order(ByteOrder.BIG_ENDIAN);
+		bytes.position(8);
+		
+		textureDim.width = bytes.getShort();
+		textureDim.height = bytes.getShort();
+		
+		originalDim.width = bytes.getShort();
+		originalDim.height = bytes.getShort();
 	}
 	
 	private File dumpPkm(){
