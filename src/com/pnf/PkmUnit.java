@@ -16,26 +16,19 @@ public class PkmUnit extends AbstractBinaryUnit {
 	private static final String TOOL = "etc1tool";
 
 	private PkmTool pkmTool;
-	private StringBuffer desc = new StringBuffer(super.getDescription());
+	private StringBuffer desc;
+	private boolean initError = false;
 
 	public PkmUnit(String name, byte[] data, IUnitProcessor unitProcessor, IUnit parent, IPropertyDefinitionManager pdm) {
 		super(null, data, TYPE, name, unitProcessor, parent, pdm);
-	}
 
-	public String getDescription(){
-		return desc.toString();
-	}
-
-	public boolean process(){
 		// Retrieve property entered by user
 		File platformTools = new File(getPropertyManager().getString(PkmPlugin.PROP_NAME));
 
 		// Terminate early if platformTools file is not valid
 		if(!platformTools.exists() || !platformTools.isDirectory()){
-			processed = false;
+			initError = true;
 			setStatus(platformTools.getAbsolutePath() + " is not a directory.");
-
-			return processed;
 		}
 
 		File etcTool = null;
@@ -49,13 +42,31 @@ public class PkmUnit extends AbstractBinaryUnit {
 
 		// Make sure we can find the tool
 		if(etcTool == null || !etcTool.exists()){
-			processed = false;
+			initError = true;
 			setStatus("Could not find etc1tool in directory " + platformTools.getAbsolutePath());
-
-			return processed;
 		}
 
 		pkmTool = new PkmTool(name, etcTool, data);
+
+		// Update description
+		desc = new StringBuffer(super.getDescription());
+		desc.append("\n");
+		desc.append("Properties:\n");
+		desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
+		desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
+	}
+
+	public String getDescription(){
+		return desc.toString();
+	}
+
+	public boolean process(){
+		PkmPlugin.LOG.info("Inside process**");
+		
+		if(initError){
+			processed = false;
+			return processed;
+		}
 
 		File png = pkmTool.dumpPng();
 		IUnit sub = null;
@@ -69,16 +80,11 @@ public class PkmUnit extends AbstractBinaryUnit {
 			}
 		}
 
-		if(sub != null)
+		if(sub != null){
 			getChildren().add(sub);
+			notifyListeners(new JebEvent(J.UnitChange));
+		}
 
-		// Update description
-		desc.append("\n");
-		desc.append("Properties:\n");
-		desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
-		desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
-
-		notifyListeners(new JebEvent(J.UnitChange));
 		return true;
 	}
 }
