@@ -69,9 +69,9 @@ public class PkmTool {
 		StringBuffer b = new StringBuffer();
 		
 		b.append("[");
-		b.append(d.getWidth());
-		b.append("x");
-		b.append(d.getHeight());
+		b.append(d.width);
+		b.append(" x ");
+		b.append(d.height);
 		b.append("]");
 		
 		return b.toString();
