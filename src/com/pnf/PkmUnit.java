@@ -25,7 +25,6 @@ public class PkmUnit extends AbstractBinaryUnit {
 		super(null, data, TYPE, name, unitProcessor, parent, pdm);
 
 		byte[] bytes = null;
-
 		try(InputStream stream = data.getStream()){
 			bytes = IO.readInputStream(stream);
 		}catch(IOException e){
@@ -34,8 +33,10 @@ public class PkmUnit extends AbstractBinaryUnit {
 
 		// Retrieve property entered by user
 		String property = getPropertyManager().getString(PkmPlugin.PROP_NAME);
-		if(property == null || property.isEmpty())
+		if(property == null || property.isEmpty()){
+			initError = true;
 			setStatus(PkmPlugin.ANDROID_TOOLS_DIR + " key must be set for use in parsing PKM files.");
+		}
 
 		File platformTools = new File(property);
 		File[] files = platformTools.listFiles();
@@ -43,9 +44,8 @@ public class PkmUnit extends AbstractBinaryUnit {
 		// Terminate early if platformTools file is not valid
 		if(!platformTools.exists() || !platformTools.isDirectory() || files == null){
 			initError = true;
-			setStatus(platformTools.getAbsolutePath() + " is not a directory.");
+			setStatus(platformTools.getAbsolutePath() + " is not a valid directory or is empty.");
 		}
-
 		File etcTool = null;
 
 		// Look for etc1tool anywhere in the directory specified by the given path
@@ -57,17 +57,19 @@ public class PkmUnit extends AbstractBinaryUnit {
 		// Make sure we can find the tool
 		if(etcTool == null || !etcTool.exists()){
 			initError = true;
-			setStatus("Could not find etc1tool in directory " + platformTools.getAbsolutePath());
+			setStatus("Could not find " + TOOL + " executable in directory: " + platformTools.getAbsolutePath());
 		}
 
-		pkmTool = new PkmTool(etcTool, bytes);
+		if(!initError){
+			pkmTool = new PkmTool(etcTool, bytes);
 
-		// Update description
-		desc = new StringBuffer(super.getDescription());
-		desc.append("\n");
-		desc.append("Properties:\n");
-		desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
-		desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
+			// Update description
+			desc = new StringBuffer(super.getDescription());
+			desc.append("\n");
+			desc.append("ETC1 Compression Properties:\n");
+			desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
+			desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
+		}
 	}
 
 	public String getDescription(){
