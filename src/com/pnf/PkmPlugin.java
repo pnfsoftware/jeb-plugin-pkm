@@ -1,11 +1,15 @@
 package com.pnf;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import com.pnfsoftware.jeb.core.IUnitCreator;
 import com.pnfsoftware.jeb.core.PluginInformation;
+import com.pnfsoftware.jeb.core.input.IInput;
 import com.pnfsoftware.jeb.core.properties.IPropertyDefinitionManager;
 import com.pnfsoftware.jeb.core.properties.IPropertyManager;
 import com.pnfsoftware.jeb.core.properties.impl.PropertyTypeString;
 import com.pnfsoftware.jeb.core.units.AbstractUnitIdentifier;
-import com.pnfsoftware.jeb.core.units.IBinaryFrames;
 import com.pnfsoftware.jeb.core.units.IUnit;
 import com.pnfsoftware.jeb.core.units.IUnitProcessor;
 import com.pnfsoftware.jeb.util.logging.GlobalLog;
@@ -19,16 +23,25 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 	public static final String ANDROID_TOOLS_DIR = "AndroidPlatformToolsDirectory";
 	public static final String PROP_NAME = ".parsers." + ID + "." + ANDROID_TOOLS_DIR;
 
+	static {
+		System.setOut(new PrintStream(new ByteArrayOutputStream(50){
+			public void write(byte[] b, int off, int len){
+				String s = new String(b, off, len);
+				LOG.info("%s", s);
+			}
+		}));
+	}
+
 	public PkmPlugin() {
 		super(ID, 0);
 	}
 
-	public boolean identify(byte[] stream, IUnit unit) {
+	public boolean canIdentify(IInput stream, IUnitCreator unit) {
 		return checkBytes(stream, 0, PKM_MAGIC);
 	}
 
 	public void initialize(IPropertyDefinitionManager parent, IPropertyManager pm) {
-		super.initialize(parent, pm);
+		super.initialize(parent);
 
 		// We need to use the android tools, so require it as an input before working with PKM files
 		PropertyTypeString pts = PropertyTypeString.create();
@@ -38,7 +51,7 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 	}
 
 	@Override
-	public IUnit prepare(String name, byte[] data, IUnitProcessor processor, IUnit parent) {
+	public IUnit prepare(String name, IInput data, IUnitProcessor processor, IUnitCreator parent) {
 		PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
 		unit.process();
 		return unit;
@@ -47,10 +60,5 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 	@Override
 	public PluginInformation getPluginInformation() {
 		return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "1.0", "PNF Software");
-	}
-
-	@Override
-	public IUnit reload(IBinaryFrames data, IUnitProcessor processor, IUnit unit) {
-		return null;
 	}
 }

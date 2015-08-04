@@ -6,11 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.pnfsoftware.jeb.util.IO;
 
 public class PkmTool {
 	private static final String TEMP_DIR = "pkm_temp";
+	private static final String PKM_EXT = ".pkm";
+	private static final String PNG_EXT = ".png";
+	
 	private static File TEMP = null;
 	static {
 		try {
@@ -20,8 +25,9 @@ public class PkmTool {
 		}
 	}
 
+	private String timestamp = new SimpleDateFormat("yyyyMMddhhmm").format(new Date());;
+
 	private ByteBuffer bytes;
-	private String name;
 	private File etcTool;
 	private Dimension textureDim = new Dimension();
 	private Dimension originalDim = new Dimension();
@@ -46,10 +52,9 @@ public class PkmTool {
 	 * @param etcTool a {@code File} reference to the etc1tool executable
 	 * @param data a {@code byte} array containing the PKM data
 	 */
-	public PkmTool(String name, File etcTool, byte[] data){
+	public PkmTool(File etcTool, byte[] data){
 		bytes = ByteBuffer.wrap(data);
 		this.etcTool = etcTool;
-		this.name = name;
 
 		// Process PKM info out of data
 		bytes.order(ByteOrder.BIG_ENDIAN);
@@ -93,7 +98,8 @@ public class PkmTool {
 	}
 
 	private File dumpPkm(){
-		File pkm = TEMP.toPath().resolve(name).toFile();
+		File pkm = TEMP.toPath().resolve(timestamp + PKM_EXT).toFile();
+
 		FileOutputStream stream = null;
 		try {
 			stream = new FileOutputStream(pkm);
@@ -109,6 +115,8 @@ public class PkmTool {
 				}
 			}
 		}
+
+		pkm.deleteOnExit();
 
 		return pkm;
 	}
@@ -129,14 +137,18 @@ public class PkmTool {
 
 	public File dumpPng(){
 		File input = dumpPkm();
+		File output = TEMP.toPath().resolve(timestamp + PNG_EXT).toFile();
 
 		Process p = null;
 
 		try {
+			String[] command = new String[]{wrap(etcTool.getAbsolutePath()),
+					wrap(input.getAbsolutePath()),
+					"--decode"
+			};
+
 			p = Runtime.getRuntime()
-					.exec(new String[]{wrap(etcTool.getAbsolutePath()),
-							"--decode",
-							wrap(input.getAbsolutePath())});
+					.exec(command);
 		} catch (IOException e) {
 			PkmPlugin.LOG.catching(e);
 		}
@@ -149,12 +161,7 @@ public class PkmTool {
 			}
 		}
 
-		File output = null;
-		for(File f: input.getParentFile().listFiles()){
-			if(f.getName().endsWith("png"))
-				output = f;
-		}
-
+		output.deleteOnExit();
 		return output;
 	}
 }

@@ -2,14 +2,16 @@ package com.pnf;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 
-import com.pnfsoftware.jeb.core.events.J;
-import com.pnfsoftware.jeb.core.events.JebEvent;
+import com.pnfsoftware.jeb.core.IUnitCreator;
+import com.pnfsoftware.jeb.core.input.BytesInput;
+import com.pnfsoftware.jeb.core.input.IInput;
 import com.pnfsoftware.jeb.core.properties.IPropertyDefinitionManager;
 import com.pnfsoftware.jeb.core.units.AbstractBinaryUnit;
-import com.pnfsoftware.jeb.core.units.IUnit;
 import com.pnfsoftware.jeb.core.units.IUnitProcessor;
+import com.pnfsoftware.jeb.util.IO;
 
 public class PkmUnit extends AbstractBinaryUnit {
 	private static final String TYPE = "pkm_image";
@@ -19,20 +21,32 @@ public class PkmUnit extends AbstractBinaryUnit {
 	private StringBuffer desc;
 	private boolean initError = false;
 
-	public PkmUnit(String name, byte[] data, IUnitProcessor unitProcessor, IUnit parent, IPropertyDefinitionManager pdm) {
+	public PkmUnit(String name, IInput data, IUnitProcessor unitProcessor, IUnitCreator parent, IPropertyDefinitionManager pdm) {
 		super(null, data, TYPE, name, unitProcessor, parent, pdm);
 
+		byte[] bytes = null;
+
+		try(InputStream stream = data.getStream()){
+			bytes = IO.readInputStream(stream);
+		}catch(IOException e){
+			PkmPlugin.LOG.catching(e);
+		}
+
 		// Retrieve property entered by user
-		File platformTools = new File(getPropertyManager().getString(PkmPlugin.PROP_NAME));
+		String property = getPropertyManager().getString(PkmPlugin.PROP_NAME);
+		if(property == null || property.isEmpty())
+			setStatus(PkmPlugin.ANDROID_TOOLS_DIR + " key must be set for use in parsing PKM files.");
+
+		File platformTools = new File(property);
+		File[] files = platformTools.listFiles();
 
 		// Terminate early if platformTools file is not valid
-		if(!platformTools.exists() || !platformTools.isDirectory()){
+		if(!platformTools.exists() || !platformTools.isDirectory() || files == null){
 			initError = true;
 			setStatus(platformTools.getAbsolutePath() + " is not a directory.");
 		}
 
 		File etcTool = null;
-		File[] files = platformTools.listFiles();
 
 		// Look for etc1tool anywhere in the directory specified by the given path
 		for(File f: files){
@@ -46,7 +60,7 @@ public class PkmUnit extends AbstractBinaryUnit {
 			setStatus("Could not find etc1tool in directory " + platformTools.getAbsolutePath());
 		}
 
-		pkmTool = new PkmTool(name, etcTool, data);
+		pkmTool = new PkmTool(etcTool, bytes);
 
 		// Update description
 		desc = new StringBuffer(super.getDescription());
@@ -61,28 +75,20 @@ public class PkmUnit extends AbstractBinaryUnit {
 	}
 
 	public boolean process(){
-		PkmPlugin.LOG.info("Inside process**");
-		
 		if(initError){
 			processed = false;
 			return processed;
 		}
 
 		File png = pkmTool.dumpPng();
-		IUnit sub = null;
 
 		if(png != null){
 			try {
-				byte[] data2 = Files.readAllBytes(png.toPath());
-				sub = getUnitProcessor().process(png.getName(), data2, this);
+				byte[] data = Files.readAllBytes(png.toPath());
+				addChildUnit(getUnitProcessor().process("Decompressed Image", new BytesInput(data), this));
 			} catch (IOException e) {
 				PkmPlugin.LOG.catching(e);
 			}
-		}
-
-		if(sub != null){
-			getChildren().add(sub);
-			notifyListeners(new JebEvent(J.UnitChange));
 		}
 
 		return true;
