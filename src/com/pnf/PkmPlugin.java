@@ -7,7 +7,6 @@ import com.pnfsoftware.jeb.core.IUnitCreator;
 import com.pnfsoftware.jeb.core.PluginInformation;
 import com.pnfsoftware.jeb.core.input.IInput;
 import com.pnfsoftware.jeb.core.properties.IPropertyDefinitionManager;
-import com.pnfsoftware.jeb.core.properties.IPropertyManager;
 import com.pnfsoftware.jeb.core.properties.impl.PropertyTypeString;
 import com.pnfsoftware.jeb.core.units.AbstractUnitIdentifier;
 import com.pnfsoftware.jeb.core.units.IUnit;
@@ -40,14 +39,12 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 		return checkBytes(stream, 0, PKM_MAGIC);
 	}
 
-	public void initialize(IPropertyDefinitionManager parent, IPropertyManager pm) {
+	public void initialize(IPropertyDefinitionManager parent) {
 		super.initialize(parent);
 
 		// We need to use the android tools, so require it as an input before working with PKM files
 		PropertyTypeString pts = PropertyTypeString.create();
-
-		if(getPropertyDefinitionManager().getDefinition(ANDROID_TOOLS_DIR) == null)
-			getPropertyDefinitionManager().addDefinition(ANDROID_TOOLS_DIR, pts);
+		getPropertyDefinitionManager().addDefinition(ANDROID_TOOLS_DIR, pts);
 	}
 
 	@Override
