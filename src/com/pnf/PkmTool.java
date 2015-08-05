@@ -10,7 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.pnfsoftware.jeb.util.IO;
-
+/**
+ * Class responsible for handling all ETC1 decompression functions
+ * @author carlos
+ *
+ */
 public class PkmTool {
 	private static final String TEMP_DIR = "pkm_temp";
 	private static final String PKM_EXT = ".pkm";
@@ -47,10 +51,9 @@ public class PkmTool {
 	 * 
 	 */
 	/**
-	 * Creates a new {@code PkmTool} object from the given properties and byte data
-	 * @param name the name of the PKM image (used when creating the uncompressed PNG)
+	 * Creates a new {@code PkmTool} object from the given byte data
 	 * @param etcTool a {@code File} reference to the etc1tool executable
-	 * @param data a {@code byte} array containing the PKM data
+	 * @param data a {@code byte} array containing the PKM image data
 	 */
 	public PkmTool(File etcTool, byte[] data){
 		bytes = ByteBuffer.wrap(data);
@@ -131,7 +134,7 @@ public class PkmTool {
 	}
 
 	/**
-	 * Dumps this this PKM to an uncompressed PNG
+	 * Dumps this PKM to an uncompressed PNG
 	 * @return a {@code File} object reference to the uncompressed PNG image
 	 */
 

@@ -12,6 +12,11 @@ import com.pnfsoftware.jeb.core.units.IUnitProcessor;
 import com.pnfsoftware.jeb.util.logging.GlobalLog;
 import com.pnfsoftware.jeb.util.logging.ILogger;
 
+/**
+ * Entry-point for ETC1 parser
+ * @author carlos
+ *
+ */
 public class PkmPlugin extends AbstractUnitIdentifier{
 	private static final int[] PKM_MAGIC = {(byte) 0x50, (byte) 0x4B, (byte) 0x4D, (byte) 0x20, (byte) 0x31, (byte) 0x30};
 	private static final String ID = "pkm_plugin";
