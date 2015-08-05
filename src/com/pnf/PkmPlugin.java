@@ -1,10 +1,8 @@
 package com.pnf;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import com.pnfsoftware.jeb.core.IUnitCreator;
 import com.pnfsoftware.jeb.core.PluginInformation;
+import com.pnfsoftware.jeb.core.Version;
 import com.pnfsoftware.jeb.core.input.IInput;
 import com.pnfsoftware.jeb.core.properties.IPropertyDefinitionManager;
 import com.pnfsoftware.jeb.core.properties.impl.PropertyTypeString;
@@ -21,15 +19,6 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 	public static final ILogger LOG = GlobalLog.getLogger(PkmPlugin.class);
 	public static final String ANDROID_TOOLS_DIR = "AndroidPlatformToolsDirectory";
 	public static final String PROP_NAME = ".parsers." + ID + "." + ANDROID_TOOLS_DIR;
-
-	static {
-		System.setOut(new PrintStream(new ByteArrayOutputStream(50){
-			public void write(byte[] b, int off, int len){
-				String s = new String(b, off, len);
-				LOG.info("%s", s);
-			}
-		}));
-	}
 
 	public PkmPlugin() {
 		super(ID, 0);
@@ -56,6 +45,6 @@ public class PkmPlugin extends AbstractUnitIdentifier{
 
 	@Override
 	public PluginInformation getPluginInformation() {
-		return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "1.0", "PNF Software");
+		return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software", new Version(1, 0, 0));
 	}
 }
