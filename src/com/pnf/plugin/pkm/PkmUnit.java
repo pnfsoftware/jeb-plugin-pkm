@@ -55,6 +55,7 @@ public class PkmUnit extends AbstractBinaryUnit {
 		if(!platformTools.exists() || !platformTools.isDirectory() || files == null){
 			initError = true;
 			setStatus(platformTools.getAbsolutePath() + " is not a valid directory or is empty.");
+			return;
 		}else{
 			// Look for etc1tool anywhere in the directory specified by the given path
 			for(File f: files){
@@ -66,19 +67,18 @@ public class PkmUnit extends AbstractBinaryUnit {
 			if(etcTool == null || !etcTool.exists()){
 				initError = true;
 				setStatus("Could not find " + TOOL + " executable in directory: " + platformTools.getAbsolutePath());
+				return;
 			}
 		}
 
-		if(!initError){
-			pkmTool = new PkmTool(etcTool, bytes);
+		pkmTool = new PkmTool(etcTool, bytes);
 
-			// Update description
-			desc = new StringBuffer(super.getDescription());
-			desc.append("\n");
-			desc.append("ETC1 Compression Properties:\n");
-			desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
-			desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
-		}
+		// Update description
+		desc = new StringBuffer(super.getDescription());
+		desc.append("\n");
+		desc.append("ETC1 Compression Properties:\n");
+		desc.append("- Texture Dimensions: " + pkmTool.getTextureDim() + "\n");
+		desc.append("- Original Dimensions: " + pkmTool.getOriginalDim() + "\n");
 	}
 
 	public String getDescription(){
