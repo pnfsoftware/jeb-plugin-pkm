@@ -1,4 +1,4 @@
-package com.pnf;
+package com.pnf.plugin.pkm;
 
 import java.awt.Dimension;
 import java.io.File;

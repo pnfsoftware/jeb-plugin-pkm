@@ -1,4 +1,4 @@
-package com.pnf;
+package com.pnf.plugin.pkm;
 
 import java.io.File;
 import java.io.IOException;

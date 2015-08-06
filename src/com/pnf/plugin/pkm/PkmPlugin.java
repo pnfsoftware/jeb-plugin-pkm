@@ -1,4 +1,4 @@
-package com.pnf;
+package com.pnf.plugin.pkm;
 
 import com.pnfsoftware.jeb.core.IUnitCreator;
 import com.pnfsoftware.jeb.core.PluginInformation;
