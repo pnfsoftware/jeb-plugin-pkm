@@ -29,7 +29,7 @@ public class PkmTool {
 		}
 	}
 
-	private String timestamp = new SimpleDateFormat("yyyyMMddhhmm").format(new Date());;
+	private String timestamp = new SimpleDateFormat("yyyyMMddhhmmssSS").format(new Date());;
 
 	private ByteBuffer bytes;
 	private File etcTool;
