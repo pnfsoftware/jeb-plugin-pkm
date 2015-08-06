@@ -38,7 +38,7 @@ import com.pnfsoftware.jeb.util.IO;
  *
  */
 public class PkmUnit extends AbstractBinaryUnit {
-    private static final String TYPE = "pkm_image";
+    //private static final String TYPE = "pkm_image";
     private static final String TOOL = "etc1tool";
 
     private PkmTool pkmTool;
@@ -47,8 +47,7 @@ public class PkmUnit extends AbstractBinaryUnit {
 
     public PkmUnit(String name, IInput data, IUnitProcessor unitProcessor, IUnitCreator parent,
             IPropertyDefinitionManager pdm) {
-        super(null, data, TYPE, name, unitProcessor, parent, pdm);
-
+        super(null, data, PkmPlugin.TYPE, name, unitProcessor, parent, pdm);
         // Read the entire stream into an array for processing
         byte[] bytes = null;
         try(InputStream stream = data.getStream()) {
@@ -59,12 +58,11 @@ public class PkmUnit extends AbstractBinaryUnit {
         }
 
         // Retrieve property entered by user
-        String property = getPropertyManager().getString(PkmPlugin.PROP_NAME);
-
-        // Check to make sure the user entered a valid value for the property
+        String property = getPropertyManager().getString(PkmPlugin.ANDROID_TOOLS_DIR);
         if(property == null || property.isEmpty()) {
             initError = true;
             setStatus(PkmPlugin.ANDROID_TOOLS_DIR + " key must be set for use in parsing PKM files.");
+            return;
         }
 
         File platformTools = new File(property);
@@ -76,8 +74,7 @@ public class PkmUnit extends AbstractBinaryUnit {
             initError = true;
             setStatus(platformTools.getAbsolutePath() + " is not a valid directory or is empty.");
             return;
-        }
-        else {
+        } else {
             // Look for etc1tool anywhere in the directory specified by the
             // given path
             for(File f : files) {
@@ -121,9 +118,6 @@ public class PkmUnit extends AbstractBinaryUnit {
             try {
                 // Read all data from dumped png into a byte array
                 byte[] data = Files.readAllBytes(png.toPath());
-
-                // Have the unit processor add the proper image unit for the
-                // decompresssed image
                 addChildUnit(getUnitProcessor().process("Decompressed Image", new BytesInput(data), this));
             }
             catch(IOException e) {

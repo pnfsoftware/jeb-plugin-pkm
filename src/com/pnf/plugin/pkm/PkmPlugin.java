@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package com.pnf.plugin.pkm;
 
 import com.pnfsoftware.jeb.core.IUnitCreator;
@@ -35,16 +36,17 @@ import com.pnfsoftware.jeb.util.logging.ILogger;
  * @author carlos
  *
  */
-public class PkmPlugin extends AbstractUnitIdentifier {
-    private static final int[] PKM_MAGIC = { (byte)0x50, (byte)0x4B, (byte)0x4D, (byte)0x20, (byte)0x31, (byte)0x30 };
-    private static final String ID = "pkm_plugin";
 
+public class PkmPlugin extends AbstractUnitIdentifier {
+    static final String TYPE = "pkm_etc1";
+
+    private static final int[] PKM_MAGIC = { (byte)0x50, (byte)0x4B, (byte)0x4D, (byte)0x20, (byte)0x31, (byte)0x30 };
+    
     public static final ILogger LOG = GlobalLog.getLogger(PkmPlugin.class);
     public static final String ANDROID_TOOLS_DIR = "AndroidPlatformToolsDirectory";
-    public static final String PROP_NAME = ".parsers." + ID + "." + ANDROID_TOOLS_DIR;
 
     public PkmPlugin() {
-        super(ID, 0);
+        super(TYPE, 0);
     }
 
     public boolean canIdentify(IInput stream, IUnitCreator unit) {
@@ -69,7 +71,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
 
     @Override
     public PluginInformation getPluginInformation() {
-        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software", new Version(1,
-                0, 0));
+        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser",
+                "PNF Software", new Version(1, 0, 0));
     }
 }
