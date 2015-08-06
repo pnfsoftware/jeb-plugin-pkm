@@ -49,24 +49,24 @@ public class PkmUnit extends AbstractBinaryUnit {
 
 		File platformTools = new File(property);
 		File[] files = platformTools.listFiles();
+		File etcTool = null;
 
 		// Terminate early if platformTools path is not valid
 		if(!platformTools.exists() || !platformTools.isDirectory() || files == null){
 			initError = true;
 			setStatus(platformTools.getAbsolutePath() + " is not a valid directory or is empty.");
-		}
-		File etcTool = null;
+		}else{
+			// Look for etc1tool anywhere in the directory specified by the given path
+			for(File f: files){
+				if(f.getName().contains(TOOL))
+					etcTool = f;
+			}
 
-		// Look for etc1tool anywhere in the directory specified by the given path
-		for(File f: files){
-			if(f.getName().contains(TOOL))
-				etcTool = f;
-		}
-
-		// Make sure we can find the tool
-		if(etcTool == null || !etcTool.exists()){
-			initError = true;
-			setStatus("Could not find " + TOOL + " executable in directory: " + platformTools.getAbsolutePath());
+			// Make sure we can find the tool
+			if(etcTool == null || !etcTool.exists()){
+				initError = true;
+				setStatus("Could not find " + TOOL + " executable in directory: " + platformTools.getAbsolutePath());
+			}
 		}
 
 		if(!initError){
