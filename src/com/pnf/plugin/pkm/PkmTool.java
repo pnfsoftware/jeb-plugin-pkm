@@ -70,25 +70,12 @@ public class PkmTool {
      * height (2 bytes) = " 					"
      */
     /**
-<<<<<<< HEAD
      * Creates a new {@code PkmTool} object from the given byte data
      * 
      * @param etcTool
      *            a {@code File} reference to the etc1tool executable
      * @param data
      *            a {@code byte} array containing the PKM image data
-=======
-     * Creates a new {@code PkmTool} object from the given properties and byte
-     * data
-     * 
-     * @param name
-     *            the name of the PKM image (used when creating the uncompressed
-     *            PNG)
-     * @param etcTool
-     *            a {@code File} reference to the etc1tool executable
-     * @param data
-     *            a {@code byte} array containing the PKM data
->>>>>>> 7e7b2b38822921064714f043f360cef146ae1968
      */
     public PkmTool(File etcTool, byte[] data) {
         bytes = ByteBuffer.wrap(data);
@@ -174,11 +161,7 @@ public class PkmTool {
     }
 
     /**
-<<<<<<< HEAD
      * Dumps this PKM to an uncompressed PNG
-=======
-     * Dumps this this PKM to an uncompressed PNG
->>>>>>> 7e7b2b38822921064714f043f360cef146ae1968
      * 
      * @return a {@code File} object reference to the uncompressed PNG image
      */
