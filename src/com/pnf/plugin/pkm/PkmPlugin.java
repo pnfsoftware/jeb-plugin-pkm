@@ -36,12 +36,11 @@ import com.pnfsoftware.jeb.util.logging.ILogger;
  * @author carlos
  *
  */
-
 public class PkmPlugin extends AbstractUnitIdentifier {
     static final String TYPE = "pkm_etc1";
 
-    private static final int[] PKM_MAGIC = { (byte)0x50, (byte)0x4B, (byte)0x4D, (byte)0x20, (byte)0x31, (byte)0x30 };
-    
+    private static final int[] PKM_MAGIC = {(byte)0x50, (byte)0x4B, (byte)0x4D, (byte)0x20, (byte)0x31, (byte)0x30};
+
     public static final ILogger LOG = GlobalLog.getLogger(PkmPlugin.class);
     public static final String ANDROID_TOOLS_DIR = "AndroidPlatformToolsDirectory";
 
@@ -71,7 +70,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
 
     @Override
     public PluginInformation getPluginInformation() {
-        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser",
-                "PNF Software", new Version(1, 0, 0));
+        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software", new Version(1,
+                0, 0));
     }
 }

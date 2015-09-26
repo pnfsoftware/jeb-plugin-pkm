@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package com.pnf.plugin.pkm;
 
 import java.io.File;
@@ -31,8 +32,8 @@ import com.pnfsoftware.jeb.core.units.IUnitProcessor;
 import com.pnfsoftware.jeb.util.IO;
 
 /**
- * Class responsible for parsing PKM image and then delegating the resultant
- * decompressed image to the appropriate parser
+ * Class responsible for parsing PKM image and then delegating the resultant decompressed image to
+ * the appropriate parser
  * 
  * @author carlos
  *
@@ -74,10 +75,11 @@ public class PkmUnit extends AbstractBinaryUnit {
             initError = true;
             setStatus(platformTools.getAbsolutePath() + " is not a valid directory or is empty.");
             return;
-        } else {
+        }
+        else {
             // Look for etc1tool anywhere in the directory specified by the
             // given path
-            for(File f : files) {
+            for(File f: files) {
                 if(f.getName().contains(TOOL))
                     etcTool = f;
             }

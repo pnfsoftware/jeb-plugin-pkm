@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package com.pnf.plugin.pkm;
 
 import java.awt.Dimension;
@@ -34,7 +35,6 @@ import com.pnfsoftware.jeb.util.IO;
  * @author carlos
  *
  */
-
 public class PkmTool {
     private static final String TEMP_DIR = "pkm_temp";
     private static final String PKM_EXT = ".pkm";
@@ -72,10 +72,8 @@ public class PkmTool {
     /**
      * Creates a new {@code PkmTool} object from the given byte data
      * 
-     * @param etcTool
-     *            a {@code File} reference to the etc1tool executable
-     * @param data
-     *            a {@code byte} array containing the PKM image data
+     * @param etcTool a {@code File} reference to the etc1tool executable
+     * @param data a {@code byte} array containing the PKM image data
      */
     public PkmTool(File etcTool, byte[] data) {
         bytes = ByteBuffer.wrap(data);
@@ -127,23 +125,11 @@ public class PkmTool {
     private File dumpPkm() {
         File pkm = TEMP.toPath().resolve(timestamp + PKM_EXT).toFile();
 
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(pkm);
+        try(FileOutputStream stream = new FileOutputStream(pkm)) {
             stream.write(bytes.array());
         }
         catch(IOException e) {
             PkmPlugin.LOG.catching(e);
-        }
-        finally {
-            if(stream != null) {
-                try {
-                    stream.close();
-                }
-                catch(IOException e) {
-                    PkmPlugin.LOG.catching(e);
-                }
-            }
         }
 
         pkm.deleteOnExit();
@@ -173,8 +159,7 @@ public class PkmTool {
         Process p = null;
 
         try {
-            String[] command = new String[] { wrap(etcTool.getAbsolutePath()), wrap(input.getAbsolutePath()),
-                    "--decode" };
+            String[] command = new String[]{wrap(etcTool.getAbsolutePath()), wrap(input.getAbsolutePath()), "--decode"};
 
             p = Runtime.getRuntime().exec(command);
         }
