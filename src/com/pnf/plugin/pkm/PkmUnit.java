@@ -109,8 +109,12 @@ public class PkmUnit extends AbstractBinaryUnit {
     public boolean process() {
         // Don't process if there was an error during initialization
         if(initError) {
-            processed = false;
-            return processed;
+            setProcessed(false);
+            return false;
+        }
+
+        if(isProcessed()) {
+            return true;
         }
 
         // Get a reference to the decompressed ETC1 image
@@ -127,6 +131,7 @@ public class PkmUnit extends AbstractBinaryUnit {
             }
         }
 
+        setProcessed(true);
         return true;
     }
 }

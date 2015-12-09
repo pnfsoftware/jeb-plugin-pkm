@@ -48,6 +48,12 @@ public class PkmPlugin extends AbstractUnitIdentifier {
         super(TYPE, 0);
     }
 
+    @Override
+    public PluginInformation getPluginInformation() {
+        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software",
+                Version.create(1, 0, 1), Version.create(2, 1), null);
+    }
+
     public boolean canIdentify(IInput stream, IUnitCreator unit) {
         return checkBytes(stream, 0, PKM_MAGIC);
     }
@@ -66,11 +72,5 @@ public class PkmPlugin extends AbstractUnitIdentifier {
         PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
         unit.process();
         return unit;
-    }
-
-    @Override
-    public PluginInformation getPluginInformation() {
-        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software", new Version(1,
-                0, 0));
     }
 }
