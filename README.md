@@ -1,4 +1,4 @@
-# jeb2-plugin-pkm
+# PKM/ETC1 Image Parser (Android) for JEB2
 
 JEB2 Plugin for parsing Android PKM files (ETC1 compressed images)
 
