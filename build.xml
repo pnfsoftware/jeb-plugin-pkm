@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <!--===========================================================================
-
-Sample Ant build file used to build and package a JEB2 plugin
-
+Ant build file used to build and package a JEB2 plugin.
 Requirements: set up the JEB_HOME environment variable to point to your
 JEB2 installation folder.
-
-Customize the outfile, entryclass, extcp_build, and extcp_manifest properties.
-
 ============================================================================-->
 
 <project basedir="." default="build" name="jebplugin">
 
-    <fail message="Set the plugin version number: ant -Dversion=x.y.z">
+    <!-- BEGIN - CUSTOMIZE THE FOLLOWING PROPERTIES -->
+    <property name="pluginname" value="JebPkmPlugin"/>
+    <property name="entryclass" value="com.pnf.plugin.pkm.PkmPlugin"/>
+    <property name="extcp_build" value=""/>
+    <property name="extcp_manifest" value=""/>
+    <!-- END OF CUSTOMIZATION -->
+
+
+    <fail message="Set the plugin version on the command-line: ant -Dversion=x.y.z">
       <condition>
         <not>
           <isset property="version"/>
@@ -41,16 +44,10 @@ Customize the outfile, entryclass, extcp_build, and extcp_manifest properties.
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
 
-    <!-- Mandatory properties -->
-    <property name="src" value="src"/>
-    <property name="outfile" value="out/JebPkmPlugin-${version}.jar"/>
-    <property name="entryclass" value="com.pnf.plugin.pkm.PkmPlugin"/>
-    <!-- External libraries, for build process (semi-colon separated) -->
-    <property name="extcp_build" value=""/>
-    <!-- External libraries, for Manifest (space separated) -->
-    <property name="extcp_manifest" value=""/>
+    <property name="outfile" value="out/${pluginname}-${version}.jar"/>
 
     <target name="build" depends="clean,compile,package"/>
+
     <target name="audit" depends="clean,compile-audit"/>
 
     <target name="clean">
@@ -62,7 +59,7 @@ Customize the outfile, entryclass, extcp_build, and extcp_manifest properties.
         <delete dir="bin"/>
         <mkdir dir="bin"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
-            <src path="${src}"/>
+            <src path="src"/>
             <classpath>
                 <pathelement location="${jebjar}"/>
                 <pathelement path="${extcp_build}"/>
@@ -76,7 +73,7 @@ Customize the outfile, entryclass, extcp_build, and extcp_manifest properties.
             <compilerclasspath>
                 <pathelement location="../jeb2-common/errorprone.jar"/>
             </compilerclasspath>
-            <src path="${src}"/>
+            <src path="src"/>
             <classpath>
                 <pathelement location="${jebjar}"/>
                 <pathelement path="${extcp_build}"/>
@@ -94,7 +91,7 @@ Customize the outfile, entryclass, extcp_build, and extcp_manifest properties.
             </manifest>
             <fileset dir="bin"/>
             <!-- copy resources -->
-            <fileset dir="${src}" excludes="**/*.java"/>
+            <fileset dir="src" excludes="**/*.java"/>
             <fileset dir="." includes="README.md"/>
         </jar>
     </target>

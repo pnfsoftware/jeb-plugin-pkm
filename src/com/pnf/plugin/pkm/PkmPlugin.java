@@ -31,9 +31,9 @@ import com.pnfsoftware.jeb.util.logging.GlobalLog;
 import com.pnfsoftware.jeb.util.logging.ILogger;
 
 /**
- * Entry-point for ETC1 parser
+ * PKM (ETC1 compressed image) parser for JEB.
  * 
- * @author carlos
+ * @author Carlos Gonzales, Nicolas Falliere
  *
  */
 public class PkmPlugin extends AbstractUnitIdentifier {
@@ -51,7 +51,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
     @Override
     public PluginInformation getPluginInformation() {
         return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software",
-                Version.create(1, 0, 1), Version.create(2, 1), null);
+                Version.create(1, 0, 2), Version.create(2, 3, 3), null);
     }
 
     public boolean canIdentify(IInput stream, IUnitCreator unit) {
@@ -70,7 +70,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
     @Override
     public IUnit prepare(String name, IInput data, IUnitProcessor processor, IUnitCreator parent) {
         PkmUnit unit = new PkmUnit(name, data, processor, parent, pdm);
-        unit.process();
+        //unit.process();
         return unit;
     }
 }

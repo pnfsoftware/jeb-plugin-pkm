@@ -27,12 +27,20 @@ import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.pnfsoftware.jeb.util.IO;
+import com.pnfsoftware.jeb.util.io.IO;
 
 /**
  * Class responsible for handling all ETC1 decompression functions
  * 
- * @author carlos
+ * <pre>
+ * PKM Structure:
+ * - char tag[6] = "PKM 10"
+ * - format (2 bytes) = number of mips (zero)
+ * - texture width (2 bytes) = multiple of 4 (big endian) texture height (2 bytes) = "                       "
+ * - original width (2 bytes) = Original dimensions (big endian) original height (2 bytes) = "                     "
+ * </pre>
+ * 
+ * @author Carlos Gonzales, Nicolas Falliere
  *
  */
 public class PkmTool {
@@ -56,19 +64,6 @@ public class PkmTool {
     private Dimension textureDim = new Dimension();
     private Dimension originalDim = new Dimension();
 
-    /*
-     * PKM Structure:
-     * 
-     * char tag[6] = "PKM 10"
-     * 
-     * format (2 bytes) = number of mips (zero)
-     * 
-     * texture width (2 bytes) = multiple of 4 (big endian) texture height (2
-     * bytes) = "						"
-     * 
-     * original width (2 bytes) = Original dimensions (big endian) original
-     * height (2 bytes) = " 					"
-     */
     /**
      * Creates a new {@code PkmTool} object from the given byte data
      * 

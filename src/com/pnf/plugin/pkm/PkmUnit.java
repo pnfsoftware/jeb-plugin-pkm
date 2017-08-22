@@ -29,13 +29,13 @@ import com.pnfsoftware.jeb.core.input.IInput;
 import com.pnfsoftware.jeb.core.properties.IPropertyDefinitionManager;
 import com.pnfsoftware.jeb.core.units.AbstractBinaryUnit;
 import com.pnfsoftware.jeb.core.units.IUnitProcessor;
-import com.pnfsoftware.jeb.util.IO;
+import com.pnfsoftware.jeb.util.io.IO;
 
 /**
  * Class responsible for parsing PKM image and then delegating the resultant decompressed image to
  * the appropriate parser
  * 
- * @author carlos
+ * @author Carlos Gonzales, Nicolas Falliere
  *
  */
 public class PkmUnit extends AbstractBinaryUnit {
