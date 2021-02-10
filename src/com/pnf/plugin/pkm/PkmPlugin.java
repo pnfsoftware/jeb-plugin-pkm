@@ -50,8 +50,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
 
     @Override
     public PluginInformation getPluginInformation() {
-        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software",
-                Version.create(1, 0, 2), Version.create(2, 3, 3), null);
+        return new PluginInformation("PKM Plugin", "PKM (ETC1 compressed image) parser", "PNF Software", Version.create(1, 0, 3));
     }
 
     public boolean canIdentify(IInput stream, IUnitCreator unit) {
@@ -64,7 +63,7 @@ public class PkmPlugin extends AbstractUnitIdentifier {
         // We need to use the android tools, so require it as an input before
         // working with PKM files
         PropertyTypeString pts = PropertyTypeString.create();
-        getPropertyDefinitionManager().addDefinition(ANDROID_TOOLS_DIR, pts);
+        getPropertyDefinitionManager().addDefinition(ANDROID_TOOLS_DIR, pts, "Android SDK tools directory");
     }
 
     @Override
